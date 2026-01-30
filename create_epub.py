@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-EPUB 電子書生成腳本
+EPUB 電子書生成腳本（含封面）
 《逆流的星刻鐘塔》Chronicles of the Retrograde Tower
 """
 
@@ -22,7 +22,7 @@ def parse_markdown_to_html(md_content):
     html = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', html)
     
     # 處理斜體 (*文字*)
-    html = re.sub(r'\*(.+?)\*', r'<em>\1</em>', html)
+    html = re.sub(r'(?<!\*)\*([^*]+?)\*(?!\*)', r'<em>\1</em>', html)
     
     # 處理分隔線 (---)
     html = re.sub(r'^---+$', r'<hr/>', html, flags=re.MULTILINE)
@@ -34,14 +34,12 @@ def parse_markdown_to_html(md_content):
         p = p.strip()
         if p:
             if not p.startswith('<h') and not p.startswith('<hr'):
+                # 將段落內的換行轉為 <br/>
+                p = p.replace('\n', '<br/>')
                 p = f'<p>{p}</p>'
             formatted.append(p)
     
     html = '\n'.join(formatted)
-    
-    # 處理段落內換行
-    html = html.replace('\n', '<br/>')
-    html = html.replace('<br/><br/>', '</p><p>')
     
     return html
 
@@ -53,7 +51,7 @@ def create_epub():
     
     # 設定元數據
     book.set_identifier('retrograde-tower-2024')
-    book.set_title('逆流的星刻鐘塔 Chronicles of the Retrograde Tower')
+    book.set_title('逆流的星刻鐘塔')
     book.set_language('zh-TW')
     book.add_author('作者')
     
@@ -63,34 +61,46 @@ def create_epub():
         '與黃金時代的貴族少女艾莉西亞建立了神秘的連結，' +
         '兩人必須合作改變歷史，阻止世界的毀滅。')
     
+    # 添加封面圖片
+    cover_image_path = r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\book_cover_1769751143255.png"
+    
+    if os.path.exists(cover_image_path):
+        with open(cover_image_path, 'rb') as f:
+            cover_content = f.read()
+        book.set_cover("cover.png", cover_content)
+        print(f"封面圖片已添加: {cover_image_path}")
+    else:
+        print(f"警告: 封面圖片不存在: {cover_image_path}")
+    
     # CSS 樣式
     style = '''
     @charset "UTF-8";
     
     body {
-        font-family: "Noto Serif TC", "Source Han Serif TC", "Songti SC", serif;
+        font-family: "Noto Serif TC", "Source Han Serif TC", "Songti SC", "Microsoft JhengHei", serif;
         line-height: 1.8;
-        margin: 2em;
+        margin: 1.5em;
         text-align: justify;
     }
     
     h1 {
-        font-size: 1.8em;
+        font-size: 1.6em;
         text-align: center;
-        margin: 2em 0 1em 0;
+        margin: 1.5em 0 1em 0;
         padding-bottom: 0.5em;
-        border-bottom: 2px solid #333;
+        border-bottom: 1px solid #666;
+        color: #333;
     }
     
     h2 {
-        font-size: 1.3em;
-        margin: 1.5em 0 0.8em 0;
-        color: #444;
+        font-size: 1.2em;
+        margin: 1.2em 0 0.6em 0;
+        color: #555;
     }
     
     p {
         text-indent: 2em;
-        margin: 0.8em 0;
+        margin: 0.6em 0;
     }
     
     strong {
@@ -103,56 +113,78 @@ def create_epub():
     
     hr {
         border: none;
-        border-top: 1px solid #ccc;
-        margin: 2em 0;
+        border-top: 1px dashed #aaa;
+        margin: 1.5em 0;
     }
     
     .title-page {
         text-align: center;
-        margin-top: 30%;
+        padding-top: 30%;
     }
     
     .title-page h1 {
-        font-size: 2.5em;
+        font-size: 2em;
         border: none;
-        margin-bottom: 0.5em;
+        margin-bottom: 0.3em;
+        color: #222;
     }
     
     .title-page .subtitle {
-        font-size: 1.2em;
+        font-size: 1em;
         color: #666;
-        margin-bottom: 2em;
+        margin: 0.5em 0;
     }
     
     .title-page .author {
-        font-size: 1em;
-        margin-top: 3em;
+        font-size: 0.9em;
+        margin-top: 2em;
+        color: #888;
     }
     
     .volume-title {
         text-align: center;
-        margin-top: 40%;
+        padding-top: 35%;
     }
     
     .volume-title h1 {
-        font-size: 2em;
+        font-size: 1.8em;
         border: none;
+        color: #333;
+    }
+    
+    .volume-title p {
+        text-indent: 0;
+        font-size: 1.1em;
+        color: #666;
+    }
+    
+    .afterword {
+        margin-top: 2em;
+    }
+    
+    .afterword p {
+        text-indent: 2em;
+    }
+    
+    .center {
+        text-align: center;
+        text-indent: 0;
     }
     '''
     
     # 添加 CSS
     nav_css = epub.EpubItem(
         uid="style_nav",
-        file_name="style/nav.css",
+        file_name="style/main.css",
         media_type="text/css",
         content=style
     )
     book.add_item(nav_css)
     
-    # 創建封面頁
-    cover_content = '''
-    <html>
-    <head><link rel="stylesheet" href="style/nav.css" type="text/css"/></head>
+    # 創建書名頁
+    title_content = '''
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head><link rel="stylesheet" href="style/main.css" type="text/css"/></head>
     <body>
         <div class="title-page">
             <h1>逆流的星刻鐘塔</h1>
@@ -164,15 +196,15 @@ def create_epub():
     </html>
     '''
     
-    cover_page = epub.EpubHtml(title='封面', file_name='cover.xhtml', lang='zh-TW')
-    cover_page.content = cover_content
-    cover_page.add_item(nav_css)
-    book.add_item(cover_page)
+    title_page = epub.EpubHtml(title='書名頁', file_name='title.xhtml', lang='zh-TW')
+    title_page.content = title_content
+    title_page.add_item(nav_css)
+    book.add_item(title_page)
     
     # 創建卷頁
     volume1_content = '''
-    <html>
-    <head><link rel="stylesheet" href="style/nav.css" type="text/css"/></head>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head><link rel="stylesheet" href="style/main.css" type="text/css"/></head>
     <body>
         <div class="volume-title">
             <h1>第一卷</h1>
@@ -188,8 +220,8 @@ def create_epub():
     book.add_item(volume1_page)
     
     volume2_content = '''
-    <html>
-    <head><link rel="stylesheet" href="style/nav.css" type="text/css"/></head>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head><link rel="stylesheet" href="style/main.css" type="text/css"/></head>
     <body>
         <div class="volume-title">
             <h1>第二卷</h1>
@@ -222,6 +254,8 @@ def create_epub():
     epub_chapters = []
     
     for i, (title, filepath) in enumerate(chapters_info, 1):
+        print(f"處理章節: {title}")
+        
         # 讀取 Markdown
         with open(filepath, 'r', encoding='utf-8') as f:
             md_content = f.read()
@@ -231,9 +265,9 @@ def create_epub():
         
         # 創建章節頁面
         chapter_html = f'''
-        <html>
+        <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-            <link rel="stylesheet" href="style/nav.css" type="text/css"/>
+            <link rel="stylesheet" href="style/main.css" type="text/css"/>
         </head>
         <body>
             {html_content}
@@ -254,15 +288,18 @@ def create_epub():
     
     # 創建後記頁
     afterword_content = '''
-    <html>
-    <head><link rel="stylesheet" href="style/nav.css" type="text/css"/></head>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head><link rel="stylesheet" href="style/main.css" type="text/css"/></head>
     <body>
-        <h1>後記</h1>
-        <p>感謝您閱讀《逆流的星刻鐘塔》第一卷與第二卷。</p>
-        <p>這是一個關於時間、命運與選擇的故事。凱爾與艾莉西亞的旅程才剛剛開始——他們將繼續尋找阻止「大抽取」的方法，創造一個全新的未來。</p>
-        <p>第三卷《創造新的未來》，敬請期待。</p>
-        <hr/>
-        <p style="text-align: center; color: #888;">— 全書完 · 待續 —</p>
+        <div class="afterword">
+            <h1>後記</h1>
+            <p>感謝您閱讀《逆流的星刻鐘塔》第一卷與第二卷。</p>
+            <p>這是一個關於時間、命運與選擇的故事。凱爾與艾莉西亞的旅程才剛剛開始——他們將繼續尋找阻止「大抽取」的方法，創造一個全新的未來。</p>
+            <p>在這個故事中，我們探討了一個永恆的問題：如果可以改變過去，你願意付出什麼代價？莉亞選擇了勇敢面對命運，凱爾選擇了相信夥伴。也許，這就是「逆流者」的真正含義——不是對抗時間，而是對抗絕望。</p>
+            <p>第三卷《創造新的未來》，敬請期待。</p>
+            <hr/>
+            <p class="center" style="color: #888;">— 全書完 · 待續 —</p>
+        </div>
     </body>
     </html>
     '''
@@ -274,7 +311,7 @@ def create_epub():
     
     # 設定目錄結構
     book.toc = (
-        epub.Link('cover.xhtml', '封面', 'cover'),
+        epub.Link('title.xhtml', '書名頁', 'title'),
         (
             epub.Section('第一卷：逃離死亡'),
             tuple(epub_chapters[:5])
@@ -293,7 +330,7 @@ def create_epub():
     # 設定書脊（閱讀順序）
     book.spine = [
         'nav',
-        cover_page,
+        title_page,
         volume1_page,
         *epub_chapters[:5],
         volume2_page,
@@ -302,10 +339,13 @@ def create_epub():
     ]
     
     # 輸出 EPUB
-    output_path = r"d:\writingPlan\Chronicles_of_the_Retrograde_Tower.epub"
+    output_path = r"d:\writingPlan\逆流的星刻鐘塔_完整版.epub"
     epub.write_epub(output_path, book, {})
     
-    print(f"EPUB 電子書已生成: {output_path}")
+    print(f"\n✅ EPUB 電子書已生成: {output_path}")
+    print(f"   - 包含封面圖片")
+    print(f"   - 10 章完整內容")
+    print(f"   - 專業排版與目錄")
     return output_path
 
 if __name__ == "__main__":

@@ -153,12 +153,26 @@ def create_pdf(output_filename):
     ]
 
     # 4. Build Story
+    # Add Cover Image
+    cover_image = r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\book_cover_1769751143255.png"
+    if os.path.exists(cover_image):
+        print(f"Adding cover: {cover_image}")
+        try:
+            img = Image(cover_image, width=6*inch, height=6*inch, kind='proportional')
+            story.append(Spacer(1, 0.5*inch))
+            story.append(img)
+            story.append(PageBreak())
+        except Exception as e:
+            print(f"Error adding cover: {e}")
+    
     # Add Title Page
-    story.append(Spacer(1, 3*inch))
+    story.append(Spacer(1, 2*inch))
     story.append(Paragraph("《逆流的星刻鐘塔》", style_title))
     story.append(Paragraph("Chronicles of the Retrograde Tower", style_caption))
-    story.append(Spacer(1, 1*inch))
-    story.append(Paragraph("Complete Edition - Volume 1 & 2", style_caption))
+    story.append(Spacer(1, 0.5*inch))
+    story.append(Paragraph("完整版 · 第一卷 & 第二卷", style_caption))
+    story.append(Spacer(1, 0.3*inch))
+    story.append(Paragraph("—— 奇幻時空穿越小說 ——", style_caption))
     story.append(PageBreak())
 
     for chapter in chapters:
