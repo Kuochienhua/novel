@@ -101,6 +101,54 @@ def create_pdf(output_filename):
             "file": r"d:\writingPlan\chapter2_draft.md",
             "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter2_combat_rewind_1769674330254.png",
             "caption": "Figure 2: Combat Rewind - A desperate alliance against the Iron Blood Gang."
+        },
+        {
+            "title": "Chapter 3",
+            "file": r"d:\writingPlan\chapter3_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter3_paradox_handshake_1769745625853.png",
+            "caption": "Figure 3: The Paradox Pact - A handshake across a thousand years."
+        },
+        {
+            "title": "Chapter 4",
+            "file": r"d:\writingPlan\chapter4_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter4_infiltration_1769747160299.png",
+            "caption": "Figure 4: The Infiltration - Elise copies the barrier's core design under Leonard's watch."
+        },
+        {
+            "title": "Chapter 5",
+            "file": r"d:\writingPlan\chapter5_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter5_escape_dawn_1769747534152.png",
+            "caption": "Figure 5: Freedom's Dawn - Elise escapes as history is rewritten."
+        },
+        {
+            "title": "Chapter 6",
+            "file": r"d:\writingPlan\chapter6_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter6_mira_workshop_1769747965937.png",
+            "caption": "Figure 6: The Workshop - Mira shares her forbidden research with Lia."
+        },
+        {
+            "title": "Chapter 7",
+            "file": r"d:\writingPlan\chapter7_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter7_ash_meeting_1769748211667.png",
+            "caption": "Figure 7: The Information Broker - Kael meets the mysterious Ash."
+        },
+        {
+            "title": "Chapter 8",
+            "file": r"d:\writingPlan\chapter8_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter8_two_worlds_1769748438473.png",
+            "caption": "Figure 8: Two Worlds - Kael and Elise see each other's timelines for the first time."
+        },
+        {
+            "title": "Chapter 9",
+            "file": r"d:\writingPlan\chapter9_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter9_abyss_eye_1769748677161.png",
+            "caption": "Figure 9: The Eye of the Abyss - Elise sees all possible futures."
+        },
+        {
+            "title": "Chapter 10",
+            "file": r"d:\writingPlan\chapter10_draft.md",
+            "image": r"C:\Users\chienhua\.gemini\antigravity\brain\07522294-ab5b-4b9f-a516-eff3bd9cde4c\chapter10_hands_across_time_1769749280058.png",
+            "caption": "Figure 10: Hands Across Time - Together, they will change fate."
         }
     ]
 
@@ -110,7 +158,7 @@ def create_pdf(output_filename):
     story.append(Paragraph("《逆流的星刻鐘塔》", style_title))
     story.append(Paragraph("Chronicles of the Retrograde Tower", style_caption))
     story.append(Spacer(1, 1*inch))
-    story.append(Paragraph("Chapter 1 & 2 Draft", style_caption))
+    story.append(Paragraph("Complete Edition - Volume 1 & 2", style_caption))
     story.append(PageBreak())
 
     for chapter in chapters:
@@ -175,4 +223,4 @@ def create_pdf(output_filename):
         print(f"Error building PDF: {e}")
 
 if __name__ == "__main__":
-    create_pdf(r"d:\writingPlan\Chronicles_of_the_Retrograde_Tower_Chapters_1-2.pdf")
+    create_pdf(r"d:\writingPlan\Chronicles_of_the_Retrograde_Tower_Complete.pdf")
