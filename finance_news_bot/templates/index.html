@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日財經早報 - 訂閱</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        p.subtitle {
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input[type="email"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .features {
+            text-align: left;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #555;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+        .features li {
+            margin-bottom: 8px;
+            list-style-type: none;
+        }
+        .features li::before {
+            content: "✓";
+            color: #2ecc71;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>每日財經早報</h1>
+        <p class="subtitle">不錯過任何一條影響市場的關鍵與熱門新聞</p>
+        
+        <form action="/subscribe" method="post">
+            <div class="form-group">
+                <input type="email" name="email" placeholder="輸入您的 Email" required>
+            </div>
+            <button type="submit">立即免費訂閱</button>
+        </form>
+
+        {% if message %}
+        <div class="message {{ status }}">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <div class="features">
+            <ul>
+                <li>每日早上 07:30 準時發送</li>
+                <li>匯集 Google 財經熱門頭條</li>
+                <li>完全免費，隨時可取消</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
